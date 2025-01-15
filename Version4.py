@@ -74,6 +74,9 @@ ventana.grid_columnconfigure(0, weight=1)  # Hacer que la columna 0 sea flexible
 ventana.grid_rowconfigure(0, weight=0)  # Fijar el tamaño de la primera fila
 ventana.grid_rowconfigure(1, weight=0)  # Fijar el tamaño de la segunda fila
 ventana.grid_rowconfigure(2, weight=1)  # Permitir que la tercera fila expanda si es necesario
+ventana.grid_rowconfigure(3, weight=1)  # Permitir que la cuarta fila expanda si es necesario
+ventana.grid_rowconfigure(4, weight=1)  # Permitir que la quinta fila expanda si es necesario
+ventana.grid_rowconfigure(5, weight=1)  # Permitir que la sexta fila expanda si es necesario
 
 # Crear un campo de entrada que ocupe todo el ancho disponible
 entrada_lista = tk.Entry(ventana, width=40)
