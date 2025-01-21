@@ -719,3 +719,220 @@
     Con estos cambios, los botones tendrán una distribución uniforme, sin importar la altura de la ventana. A medida que la ventana cambie de tamaño, los botones se ajustarán para mantener una separación proporcional entre ellos.
 
     Si tienes alguna otra duda o necesitas más cambios, no dudes en comentarlo. ¡Estoy aquí para ayudar!
+
+# --------------------------------------------------------------------------------------Fase 5---------------------------------------------------------------------------------------------------#
+
+1. Modifica este código para que el diseño de la ventana y los botones sea más moderno
+    Para modernizar el diseño de la ventana y los botones de tu aplicación en Tkinter, podemos aplicar algunos cambios como el uso de ttk para botones y otros widgets, la adición de colores y efectos de hover, y una disposición más limpia. A continuación te muestro cómo puedes hacerlo:
+
+    import tkinter as tk
+    from tkinter import simpledialog, messagebox
+    from tkinter import ttk
+    import os
+
+    def mostrar_lista(event=None):
+        lista_texto = entrada_lista.get()
+        lista = lista_texto.split(",")
+        etiqueta_resultado.config(text=f"Lista ingresada: {lista}")
+        global lista_guardada
+        lista_guardada = lista
+
+    def guardar_lista():
+        nombre_archivo = simpledialog.askstring("Nombre del archivo", "Introduce el nombre del archivo (con extensión .txt):")
+        if nombre_archivo:
+            try:
+                with open(nombre_archivo, 'w') as archivo:
+                    archivo.write(str(lista_guardada))
+                etiqueta_resultado.config(text=f"Lista guardada en el archivo: {nombre_archivo}")
+            except Exception as e:
+                etiqueta_resultado.config(text=f"Error al guardar el archivo: {e}")
+
+    def cargar_lista():
+        nombre_archivo = simpledialog.askstring("Nombre del archivo", "Introduce el nombre del archivo para cargar (con extensión .txt):")
+        if nombre_archivo:
+            try:
+                with open(nombre_archivo, 'r') as archivo:
+                    contenido = archivo.read()
+                    lista = eval(contenido)
+                    entrada_lista.delete(0, tk.END)
+                    entrada_lista.insert(0, ",".join(str(x) for x in lista))
+                    etiqueta_resultado.config(text=f"Lista cargada desde el archivo: {nombre_archivo}")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo cargar el archivo: {e}")
+
+    def eliminar_archivo():
+        nombre_archivo = simpledialog.askstring("Eliminar archivo", "Introduce el nombre del archivo para eliminar (con extensión .txt):")
+        if nombre_archivo:
+            try:
+                if os.path.exists(nombre_archivo):
+                    os.remove(nombre_archivo)
+                    etiqueta_resultado.config(text=f"Archivo '{nombre_archivo}' eliminado correctamente.")
+                else:
+                    messagebox.showerror("Error", f"El archivo '{nombre_archivo}' no existe.")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo eliminar el archivo: {e}")
+
+    Crear la ventana principal
+    ventana = tk.Tk()
+    ventana.title("Ingreso, Carga, Guardado y Eliminación de Lista")
+    ventana.geometry("400x350")  # Definir un tamaño inicial adecuado
+    ventana.config(bg="#f0f0f0")  # Fondo gris claro para una apariencia más moderna
+
+    Usar un diseño grid más limpio
+    ventana.grid_columnconfigure(0, weight=1)
+
+    Crear un campo de entrada con estilo moderno
+    entrada_lista = ttk.Entry(ventana, font=("Helvetica", 12))
+    entrada_lista.grid(row=0, column=0, padx=20, pady=10, sticky="ew")
+
+    Crear un botón con estilo moderno
+    style = ttk.Style()
+    style.configure("TButton", font=("Helvetica", 12), padding=10, relief="flat", background="#4CAF50", foreground="black")
+    style.map("TButton", background=[('active', '#45a049')])
+
+    Crear botones con el estilo configurado
+    boton_mostrar = ttk.Button(ventana, text="Finalizar", command=mostrar_lista)
+    boton_mostrar.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
+
+    boton_guardar = ttk.Button(ventana, text="Guardar Lista", command=guardar_lista)
+    boton_guardar.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
+
+    boton_cargar = ttk.Button(ventana, text="Cargar Lista", command=cargar_lista)
+    boton_cargar.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
+
+    boton_eliminar = ttk.Button(ventana, text="Eliminar Archivo", command=eliminar_archivo)
+    boton_eliminar.grid(row=4, column=0, padx=20, pady=10, sticky="ew")
+
+    Crear una etiqueta con un estilo moderno
+    etiqueta_resultado = tk.Label(ventana, text="Lista ingresada:", font=("Helvetica", 12), bg="#f0f0f0")
+    etiqueta_resultado.grid(row=5, column=0, padx=20, pady=20, sticky="ew")
+
+    Atributo global para almacenar la lista ingresada
+    lista_guardada = []
+
+    Iniciar la interfaz gráfica
+    ventana.mainloop()
+    Cambios realizados:
+    Estilo moderno con ttk: Usé ttk.Entry para los campos de entrada y ttk.Button para los botones, lo que mejora la apariencia y hace que los botones sean más modernos.
+    Estilos personalizados: Se configuraron estilos para los botones con un color verde (#4CAF50) y un efecto de hover para cuando el usuario interactúa con ellos.
+    Fuentes más legibles: Se ha cambiado la fuente a "Helvetica" con tamaño 12 para una mejor legibilidad.
+    Fondo de la ventana y disposición: Se ha asignado un color de fondo gris claro para que se vea más limpio y moderno, y se ha ajustado la geometría de la ventana.
+    Estos cambios deberían proporcionar una apariencia más moderna y profesional en tu aplicación de Tkinter.
+
+2. Modifica este código para que tenga un botón de 'Ayuda' que al pulsarlo, te indique lo que hace cada botón del programa:
+    Para agregar un botón de "Ayuda" que, al ser presionado, te indique lo que hace cada botón del programa, se puede crear una ventana emergente que muestre un mensaje explicando la funcionalidad de cada botón. Aquí te muestro cómo puedes hacer esto:
+
+    Agregar un nuevo botón llamado "Ayuda".
+    Crear una función que se ejecute al presionar este botón y que muestre un mensaje explicando el propósito de cada uno de los botones de la interfaz.
+    A continuación te muestro el código modificado:
+
+    import tkinter as tk
+    from tkinter import simpledialog, messagebox
+    from tkinter import ttk
+    import os
+
+    def mostrar_lista(event=None):
+        lista_texto = entrada_lista.get()
+        lista = lista_texto.split(",")
+        etiqueta_resultado.config(text=f"Lista ingresada: {lista}")
+        global lista_guardada
+        lista_guardada = lista
+
+    def guardar_lista():
+        nombre_archivo = simpledialog.askstring("Nombre del archivo", "Introduce el nombre del archivo (con extensión .txt):")
+        if nombre_archivo:
+            try:
+                with open(nombre_archivo, 'w') as archivo:
+                    archivo.write(str(lista_guardada))
+                etiqueta_resultado.config(text=f"Lista guardada en el archivo: {nombre_archivo}")
+            except Exception as e:
+                etiqueta_resultado.config(text=f"Error al guardar el archivo: {e}")
+
+    def cargar_lista():
+        nombre_archivo = simpledialog.askstring("Nombre del archivo", "Introduce el nombre del archivo para cargar (con extensión .txt):")
+        if nombre_archivo:
+            try:
+                with open(nombre_archivo, 'r') as archivo:
+                    contenido = archivo.read()
+                    lista = eval(contenido)
+                    entrada_lista.delete(0, tk.END)
+                    entrada_lista.insert(0, ",".join(str(x) for x in lista))
+                    etiqueta_resultado.config(text=f"Lista cargada desde el archivo: {nombre_archivo}")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo cargar el archivo: {e}")
+
+    def eliminar_archivo():
+        nombre_archivo = simpledialog.askstring("Eliminar archivo", "Introduce el nombre del archivo para eliminar (con extensión .txt):")
+        if nombre_archivo:
+            try:
+                if os.path.exists(nombre_archivo):
+                    os.remove(nombre_archivo)
+                    etiqueta_resultado.config(text=f"Archivo '{nombre_archivo}' eliminado correctamente.")
+                else:
+                    messagebox.showerror("Error", f"El archivo '{nombre_archivo}' no existe.")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo eliminar el archivo: {e}")
+
+    def mostrar_ayuda():
+        # Crear un mensaje que explique la funcionalidad de cada botón
+        mensaje_ayuda = (
+            "Funcionalidades del programa:\n\n"
+            "1. 'Finalizar': Ingresa una lista separada por comas, la cual se muestra en la etiqueta.\n"
+            "2. 'Guardar Lista': Guarda la lista ingresada en un archivo de texto.\n"
+            "3. 'Cargar Lista': Carga una lista desde un archivo de texto y la muestra en el campo de entrada.\n"
+            "4. 'Eliminar Archivo': Elimina un archivo de texto especificado por el usuario."
+        )
+        messagebox.showinfo("Ayuda", mensaje_ayuda)
+
+    Crear la ventana principal
+    ventana = tk.Tk()
+    ventana.title("Ingreso, Carga, Guardado y Eliminación de Lista")
+    ventana.geometry("400x400")  # Ajustar el tamaño para incluir el botón de ayuda
+    ventana.config(bg="#f0f0f0")  # Fondo gris claro para una apariencia más moderna
+
+    Usar un diseño grid más limpio
+    ventana.grid_columnconfigure(0, weight=1)
+
+    Crear un campo de entrada con estilo moderno
+    entrada_lista = ttk.Entry(ventana, font=("Helvetica", 12))
+    entrada_lista.grid(row=0, column=0, padx=20, pady=10, sticky="ew")
+
+    Crear un botón con estilo moderno
+    style = ttk.Style()
+    style.configure("TButton", font=("Helvetica", 12), padding=10, relief="flat", background="#4CAF50", foreground="black")
+    style.map("TButton", background=[('active', '#45a049')])
+
+    Crear botones con el estilo configurado
+    boton_mostrar = ttk.Button(ventana, text="Finalizar", command=mostrar_lista)
+    boton_mostrar.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
+
+    boton_guardar = ttk.Button(ventana, text="Guardar Lista", command=guardar_lista)
+    boton_guardar.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
+
+    boton_cargar = ttk.Button(ventana, text="Cargar Lista", command=cargar_lista)
+    boton_cargar.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
+
+    boton_eliminar = ttk.Button(ventana, text="Eliminar Archivo", command=eliminar_archivo)
+    boton_eliminar.grid(row=4, column=0, padx=20, pady=10, sticky="ew")
+
+    Crear un botón de ayuda
+    boton_ayuda = ttk.Button(ventana, text="Ayuda", command=mostrar_ayuda)
+    boton_ayuda.grid(row=5, column=0, padx=20, pady=10, sticky="ew")
+
+    Crear una etiqueta con un estilo moderno
+    etiqueta_resultado = tk.Label(ventana, text="Lista ingresada:", font=("Helvetica", 12), bg="#f0f0f0")
+    etiqueta_resultado.grid(row=6, column=0, padx=20, pady=20, sticky="ew")
+
+    Atributo global para almacenar la lista ingresada
+    lista_guardada = []
+
+    Iniciar la interfaz gráfica
+    ventana.mainloop()
+    Cambios realizados:
+    Botón de Ayuda: Se añadió un nuevo botón en la interfaz llamado "Ayuda" que ejecuta la función mostrar_ayuda.
+    Función de Ayuda: La función mostrar_ayuda crea una ventana emergente (usando messagebox.showinfo) que explica qué hace cada botón del programa.
+    Ajuste en la geometría de la ventana: La ventana ahora tiene un tamaño de 400x400 para que quepan todos los botones, incluido el de "Ayuda".
+    Ahora, cuando el usuario pulse el botón "Ayuda", verá una ventana emergente que describe la funcionalidad de cada botón en el programa.
+
+
+
